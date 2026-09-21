@@ -1,405 +1,586 @@
 <!DOCTYPE html>
 <html lang="sl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Moje šolske naloge</title>
- 
-<style>
- 
-body{
-font-family:Arial,sans-serif;
-margin:0;
-background:#eef4f8;
-}
- 
-header{
-background:#0077b6;
-color:white;
-padding:15px;
-text-align:center;
-font-size:24px;
-font-weight:bold;
-}
- 
-#opozorilo{
-background:#fff3cd;
-padding:10px;
-text-align:center;
-font-weight:bold;
-}
- 
-.container{
-padding:15px;
-}
- 
-h2{
-color:#0077b6;
-}
- 
-.urnik{
-display:grid;
-grid-template-columns:repeat(5,1fr);
-gap:10px;
-}
- 
-.dan{
-background:white;
-border-radius:12px;
-padding:10px;
-box-shadow:0 2px 5px rgba(0,0,0,0.1);
-}
- 
-.dan h3{
-margin-top:0;
-text-align:center;
-color:#0077b6;
-}
- 
-.predmet{
-background:#e3f2fd;
-margin:5px 0;
-padding:8px;
-border-radius:8px;
-cursor:pointer;
-font-weight:bold;
-}
- 
-.predmet:hover{
-background:#bbdefb;
-}
- 
-.modal{
-display:none;
-position:fixed;
-top:0;
-left:0;
-width:100%;
-height:100%;
-background:rgba(0,0,0,0.5);
-}
- 
-.modal-content{
-background:white;
-width:90%;
-max-width:500px;
-margin:40px auto;
-padding:20px;
-border-radius:15px;
-}
- 
-input{
-width:100%;
-padding:10px;
-margin:10px 0;
-box-sizing:border-box;
-}
- 
-button{
-padding:8px 15px;
-border:none;
-border-radius:8px;
-cursor:pointer;
-}
- 
-.add{
-background:#4caf50;
-color:white;
-}
- 
-.done{
-background:#2196f3;
-color:white;
-}
- 
-.delete{
-background:#f44336;
-color:white;
-}
- 
-.task{
-display:flex;
-justify-content:space-between;
-align-items:center;
-background:#f5f5f5;
-padding:8px;
-margin-top:5px;
-border-radius:8px;
-}
- 
-.completed{
-text-decoration:line-through;
-color:green;
-font-weight:bold;
-}
- 
-.close{
-float:right;
-font-size:24px;
-cursor:pointer;
-}
- 
-@media(max-width:900px){
-.urnik{
-grid-template-columns:1fr;
-}
-}
- 
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Moje Domače Naloge 📚</title>
+    <!-- Google Fonts za igriv in preprost videz -->
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Nunito:wght@400;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #6C5CE7;
+            --primary-light: #A29BFE;
+            --secondary: #00CEC9;
+            --success: #00B894;
+            --danger: #FF7675;
+            --warning: #FDCB6E;
+            --bg: #F0F3F8;
+            --card-bg: #FFFFFF;
+            --text: #2D3436;
+            --radius: 16px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Nunito', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background: linear-gradient(135deg, #6C5CE7 0%, #81ECEC 100%);
+            min-height: 100vh;
+            padding: 12px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            color: var(--text);
+        }
+
+        .app-container {
+            width: 100%;
+            max-width: 500px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 24px;
+            padding: 20px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+            margin-top: 10px;
+            margin-bottom: 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        header h1 {
+            font-family: 'Fredoka', sans-serif;
+            color: var(--primary);
+            font-size: 1.8rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        header p {
+            color: #636E72;
+            font-size: 0.9rem;
+            margin-top: 4px;
+        }
+
+        /* Obrazec za vnos */
+        .add-card {
+            background: #F8F9FA;
+            border: 2px dashed var(--primary-light);
+            border-radius: var(--radius);
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+
+        .add-card h3 {
+            font-family: 'Fredoka', sans-serif;
+            font-size: 1.1rem;
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 10px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.8rem;
+            font-weight: 700;
+            margin-bottom: 4px;
+            color: #636E72;
+        }
+
+        input, select, button {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #E2E8F0;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            outline: none;
+            transition: all 0.2s;
+        }
+
+        input:focus, select:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(108, 92, 231, 0.2);
+        }
+
+        .row-2 {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-add {
+            background: var(--primary);
+            color: white;
+            font-family: 'Fredoka', sans-serif;
+            font-size: 1.1rem;
+            border: none;
+            cursor: pointer;
+            margin-top: 5px;
+            box-shadow: 0 4px 12px rgba(108, 92, 231, 0.3);
+        }
+
+        .btn-add:active {
+            transform: scale(0.98);
+        }
+
+        /* Navigacija po zavihkih */
+        .tabs {
+            display: flex;
+            background: #E2E8F0;
+            border-radius: 12px;
+            padding: 4px;
+            margin-bottom: 15px;
+            gap: 4px;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 8px 4px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            border: none;
+            background: transparent;
+            border-radius: 8px;
+            cursor: pointer;
+            color: #636E72;
+        }
+
+        .tab-btn.active {
+            background: white;
+            color: var(--primary);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        /* Filter po dnevih */
+        .day-filter {
+            display: flex;
+            gap: 6px;
+            overflow-x: auto;
+            padding-bottom: 8px;
+            margin-bottom: 15px;
+            scrollbar-width: none;
+        }
+
+        .day-filter::-webkit-scrollbar {
+            display: none;
+        }
+
+        .day-btn {
+            padding: 6px 14px;
+            border-radius: 20px;
+            border: 1px solid #E2E8F0;
+            background: white;
+            font-size: 0.8rem;
+            white-space: nowrap;
+            cursor: pointer;
+            width: auto;
+        }
+
+        .day-btn.active {
+            background: var(--primary-light);
+            color: white;
+            border-color: var(--primary-light);
+            font-weight: 700;
+        }
+
+        /* Seznam nalog */
+        .task-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .task-card {
+            background: white;
+            border-radius: var(--radius);
+            padding: 14px;
+            border-left: 6px solid var(--primary);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .task-info {
+            flex: 1;
+            padding-right: 10px;
+        }
+
+        .task-subject {
+            font-family: 'Fredoka', sans-serif;
+            font-size: 0.95rem;
+            color: var(--primary);
+            display: inline-block;
+            background: #F0EDFF;
+            padding: 2px 8px;
+            border-radius: 6px;
+            margin-bottom: 4px;
+        }
+
+        .task-desc {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 6px;
+            word-break: break-word;
+        }
+
+        .task-dates {
+            font-size: 0.75rem;
+            color: #888;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .badge {
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 0.7rem;
+        }
+
+        .badge-late {
+            background: #FFEAA7;
+            color: #D63031;
+        }
+
+        .badge-day {
+            background: #E1F5FE;
+            color: #0288D1;
+        }
+
+        /* Gumbi za ukrepanje */
+        .task-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .action-btn {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: transform 0.1s;
+        }
+
+        .action-btn:active {
+            transform: scale(0.9);
+        }
+
+        .btn-check {
+            background: #E8F8F5;
+            color: var(--success);
+        }
+
+        .btn-cross {
+            background: #FFEEDD;
+            color: var(--danger);
+        }
+
+        .btn-delete {
+            background: #F1F2F6;
+            color: #A4B0BE;
+            font-size: 0.9rem;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 30px 10px;
+            color: #A4B0BE;
+        }
+
+        .empty-state span {
+            font-size: 2.5rem;
+            display: block;
+            margin-bottom: 8px;
+        }
+    </style>
 </head>
- 
 <body>
- 
-<header>
-📚 Moje šolske naloge
-</header>
- 
-<div id="opozorilo"></div>
- 
-<div class="container">
- 
-<h2>📅 Tedenski urnik</h2>
- 
-<div class="urnik">
- 
-<div class="dan">
-<h3>PON</h3>
- 
-<div class="predmet" onclick="odpri('SLJ')">📖 SLJ <span id="s-SLJ"></span></div>
-<div class="predmet" onclick="odpri('MAT')">➗ MAT <span id="s-MAT"></span></div>
-<div class="predmet" onclick="odpri('TJA')">🇬🇧 TJA <span id="s-TJA"></span></div>
-<div class="predmet" onclick="odpri('GEO')">🌍 GEO <span id="s-GEO"></span></div>
- 
+
+<div class="app-container">
+    <header>
+        <h1>✏️ Domače Naloge 🚀</h1>
+        <p>Bodi organiziran in opravi vse pravočasno!</p>
+    </header>
+
+    <!-- Obrazec za dodajanje -->
+    <div class="add-card">
+        <h3>+ Dodaj novo nalogo</h3>
+        <div class="form-group">
+            <input type="text" id="taskInput" placeholder="Kaj moraš narediti? (npr. str. 45, naloga 3)">
+        </div>
+        <div class="row-2">
+            <div class="form-group" style="flex:1;">
+                <label>Predmet</label>
+                <select id="subjectSelect">
+                    <option value="Matematika">📐 Matematika</option>
+                    <option value="Slovenščina">📖 Slovenščina</option>
+                    <option value="Angleščina">🇬🇧 Angleščina</option>
+                    <option value="Fizika">⚡ Fizika</option>
+                    <option value="Kemija">🧪 Kemija</option>
+                    <option value="Biologija">🌿 Biologija</option>
+                    <option value="Zgodovina">🏰 Zgodovina</option>
+                    <option value="Geografija">🌍 Geografija</option>
+                    <option value="Računalništvo">💻 Računalništvo</option>
+                    <option value="Drugo">📝 Drugo</option>
+                </select>
+            </div>
+            <div class="form-group" style="flex:1;">
+                <label>Dan oddaje</label>
+                <select id="daySelect">
+                    <option value="Ponedeljek">Ponedeljek</option>
+                    <option value="Torek">Torek</option>
+                    <option value="Sreda">Sreda</option>
+                    <option value="Četrtek">Četrtek</option>
+                    <option value="Petek">Petek</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label>Rok (Datum oddaje)</label>
+            <input type="date" id="dueDateInput">
+        </div>
+        <button class="btn-add" onclick="addTask()">Dodaj nalogo ✨</button>
+    </div>
+
+    <!-- Zavihki (Aktivne / Narejene / Zamujene) -->
+    <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab('active')">Za narediti 📌</button>
+        <button class="tab-btn" onclick="switchTab('done')">Narejeno ✅</button>
+        <button class="tab-btn" onclick="switchTab('failed')">Nerešeno ❌</button>
+    </div>
+
+    <!-- Filter po dnevih -->
+    <div class="day-filter" id="dayFilterContainer">
+        <button class="day-btn active" onclick="filterByDay('Vse')">Vsi dnevi</button>
+        <button class="day-btn" onclick="filterByDay('Ponedeljek')">Pon</button>
+        <button class="day-btn" onclick="filterByDay('Torek')">Tor</button>
+        <button class="day-btn" onclick="filterByDay('Sreda')">Sre</button>
+        <button class="day-btn" onclick="filterByDay('Četrtek')">Čet</button>
+        <button class="day-btn" onclick="filterByDay('Petek')">Pet</button>
+    </div>
+
+    <!-- Seznam nalog -->
+    <div class="task-list" id="taskList"></div>
 </div>
- 
-<div class="dan">
-<h3>TOR</h3>
- 
-<div class="predmet" onclick="odpri('ZGO')">🏰 ZGO <span id="s-ZGO"></span></div>
-<div class="predmet" onclick="odpri('MAT')">➗ MAT <span id="s-MAT2"></span></div>
-<div class="predmet" onclick="odpri('GUM')">🎵 GUM <span id="s-GUM"></span></div>
-<div class="predmet" onclick="odpri('TJA')">🇬🇧 TJA <span id="s-TJA2"></span></div>
- 
-</div>
- 
-<div class="dan">
-<h3>SRE</h3>
- 
-<div class="predmet" onclick="odpri('SPO')">🏃 ŠPO <span id="s-SPO"></span></div>
-<div class="predmet" onclick="odpri('LUM')">🎨 LUM <span id="s-LUM"></span></div>
-<div class="predmet" onclick="odpri('TIT')">⚙️ TIT <span id="s-TIT"></span></div>
-<div class="predmet" onclick="odpri('SLJ')">📖 SLJ <span id="s-SLJ2"></span></div>
- 
-</div>
- 
-<div class="dan">
-<h3>ČET</h3>
- 
-<div class="predmet" onclick="odpri('GEO')">🌍 GEO <span id="s-GEO2"></span></div>
-<div class="predmet" onclick="odpri('TJA')">🇬🇧 TJA <span id="s-TJA3"></span></div>
-<div class="predmet" onclick="odpri('SLJ')">📖 SLJ <span id="s-SLJ3"></span></div>
-<div class="predmet" onclick="odpri('MAT')">➗ MAT <span id="s-MAT3"></span></div>
- 
-</div>
- 
-<div class="dan">
-<h3>PET</h3>
- 
-<div class="predmet" onclick="odpri('SLJ')">📖 SLJ <span id="s-SLJ4"></span></div>
-<div class="predmet" onclick="odpri('MAT')">➗ MAT <span id="s-MAT4"></span></div>
-<div class="predmet" onclick="odpri('DKE')">🏛️ DKE <span id="s-DKE"></span></div>
-<div class="predmet" onclick="odpri('NAR')">🔬 NAR <span id="s-NAR"></span></div>
- 
-</div>
- 
-</div>
- 
-</div>
- 
-<div class="modal" id="modal">
- 
-<div class="modal-content">
- 
-<span class="close" onclick="zapri()">&times;</span>
- 
-<h2 id="naslov"></h2>
- 
-<input id="novaNaloga" placeholder="Vpiši domačo nalogo">
- 
-<button class="add" onclick="dodajNalogo()">
-➕ Dodaj nalogo
-</button>
- 
-<div id="naloge"></div>
- 
-</div>
- 
-</div>
- 
+
 <script>
- 
-let trenutniPredmet="";
-let podatki=JSON.parse(localStorage.getItem("naloge"))||{};
- 
-function odpri(predmet){
- 
-trenutniPredmet=predmet;
- 
-document.getElementById("naslov").innerText=predmet;
- 
-document.getElementById("modal").style.display="block";
- 
-prikaziNaloge();
- 
-}
- 
-function zapri(){
-document.getElementById("modal").style.display="none";
-}
- 
-function dodajNalogo(){
- 
-let txt=document.getElementById("novaNaloga").value;
- 
-if(txt.trim()=="") return;
- 
-if(!podatki[trenutniPredmet]){
-podatki[trenutniPredmet]=[];
-}
- 
-podatki[trenutniPredmet].push({
-text:txt,
-done:false
-});
- 
-document.getElementById("novaNaloga").value="";
- 
-shrani();
- 
-prikaziNaloge();
-posodobiZvezdice();
- 
-}
- 
-function prikaziNaloge(){
- 
-let div=document.getElementById("naloge");
- 
-let arr=podatki[trenutniPredmet]||[];
- 
-div.innerHTML="";
- 
-arr.forEach((n,index)=>{
- 
-div.innerHTML+=`
-<div class="task">
- 
-<span class="${n.done?'completed':''}">
-${n.done?'✅':'⬜'} ${n.text}
-</span>
- 
-<div>
- 
-<button class="done"
-onclick="oznaci(${index})">
-✔
-</button>
- 
-<button class="delete"
-onclick="izbrisi(${index})">
-🗑
-</button>
- 
-</div>
- 
-</div>
-`;
- 
-});
- 
-}
- 
-function oznaci(index){
- 
-podatki[trenutniPredmet][index].done=
-!podatki[trenutniPredmet][index].done;
- 
-shrani();
- 
-prikaziNaloge();
- 
-posodobiZvezdice();
- 
-}
- 
-function izbrisi(index){
- 
-podatki[trenutniPredmet].splice(index,1);
- 
-shrani();
- 
-prikaziNaloge();
- 
-posodobiZvezdice();
- 
-}
- 
-function shrani(){
- 
-localStorage.setItem(
-"naloge",
-JSON.stringify(podatki)
-);
- 
-}
- 
-function posodobiZvezdice(){
- 
-let vsi=document.querySelectorAll("[id^='s-']");
- 
-vsi.forEach(x=>x.innerHTML="");
- 
-let skupaj=0;
- 
-for(let predmet in podatki){
- 
-let odprte=
-podatki[predmet]
-.filter(n=>!n.done)
-.length;
- 
-skupaj+=odprte;
- 
-let stars="";
- 
-if(odprte==1) stars="⭐";
-if(odprte==2) stars="⭐⭐";
-if(odprte>=3) stars="⭐⭐⭐";
- 
-document.querySelectorAll("[id*='"+predmet+"']")
-.forEach(x=>{
-x.innerHTML=stars;
-});
- 
-}
- 
-let opoz="✅ Vse naloge opravljene";
- 
-if(skupaj>0){
-opoz="⚠ Nedokončanih nalog: "+skupaj;
-}
- 
-if(skupaj>=10){
-opoz="🔥 Imaš veliko nedokončanih nalog!";
-}
- 
-document.getElementById("opozorilo").innerText=opoz;
- 
-}
- 
-posodobiZvezdice();
- 
+    let tasks = JSON.parse(localStorage.getItem('my_school_tasks')) || [];
+    let currentTab = 'active'; // 'active', 'done', 'failed'
+    let currentDayFilter = 'Vse';
+
+    // Nastavi privzeti datum v vnosnem polju na jutrišnja datum
+    window.onload = function() {
+        const tomorrow = new Date();
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        document.getElementById('dueDateInput').valueAsDate = tomorrow;
+        
+        // Avtomatsko izberi dan v tednu glede na jutrišnji datum
+        const days = ['Nedelja', 'Ponedeljek', 'Torek', 'Sreda', 'Četrtek', 'Petek', 'Sobota'];
+        const dayName = days[tomorrow.getDay()];
+        if(['Ponedeljek', 'Torek', 'Sreda', 'Četrtek', 'Petek'].includes(dayName)) {
+            document.getElementById('daySelect').value = dayName;
+        }
+
+        renderTasks();
+    };
+
+    function saveTasks() {
+        localStorage.setItem('my_school_tasks', JSON.stringify(tasks));
+    }
+
+    function addTask() {
+        const text = document.getElementById('taskInput').value.trim();
+        const subject = document.getElementById('subjectSelect').value;
+        const day = document.getElementById('daySelect').value;
+        const dueDate = document.getElementById('dueDateInput').value;
+
+        if (!text) {
+            alert('Prosimo, vnesi opis naloge!');
+            return;
+        }
+
+        const now = new Date();
+        const createdDateStr = now.toLocaleDateString('sl-SI');
+
+        const newTask = {
+            id: Date.now(),
+            text: text,
+            subject: subject,
+            day: day,
+            createdDate: createdDateStr,
+            dueDate: dueDate,
+            completedDate: null,
+            status: 'active' // 'active', 'done', 'failed'
+        };
+
+        tasks.unshift(newTask);
+        saveTasks();
+        renderTasks();
+
+        // Počisti vnosno polje
+        document.getElementById('taskInput').value = '';
+    }
+
+    function markStatus(id, newStatus) {
+        const now = new Date();
+        const todayStr = now.toISOString().split('T')[0];
+        const dateFormatted = now.toLocaleDateString('sl-SI');
+
+        tasks = tasks.map(task => {
+            if (task.id === id) {
+                let isLate = false;
+                if (newStatus === 'done' && task.dueDate && todayStr > task.dueDate) {
+                    isLate = true;
+                }
+                return {
+                    ...task,
+                    status: newStatus,
+                    completedDate: dateFormatted,
+                    isLate: isLate
+                };
+            }
+            return task;
+        });
+
+        saveTasks();
+        renderTasks();
+    }
+
+    function deleteTask(id) {
+        if (confirm('Ali res želiš izbrisati to nalogo?')) {
+            tasks = tasks.filter(task => task.id !== id);
+            saveTasks();
+            renderTasks();
+        }
+    }
+
+    function switchTab(tab) {
+        currentTab = tab;
+        document.querySelectorAll('.tab-btn').forEach((btn, index) => {
+            btn.classList.toggle('active', 
+                (tab === 'active' && index === 0) || 
+                (tab === 'done' && index === 1) || 
+                (tab === 'failed' && index === 2)
+            );
+        });
+        renderTasks();
+    }
+
+    function filterByDay(day) {
+        currentDayFilter = day;
+        document.querySelectorAll('.day-btn').forEach(btn => {
+            btn.classList.toggle('active', btn.innerText.includes(day) || (day === 'Vse' && btn.innerText.includes('Vsi')));
+        });
+        renderTasks();
+    }
+
+    function renderTasks() {
+        const listElement = document.getElementById('taskList');
+        listElement.innerHTML = '';
+
+        // Filtriranje glede na zavihek in izbrani dan
+        let filtered = tasks.filter(t => t.status === currentTab);
+
+        if (currentDayFilter !== 'Vse') {
+            filtered = filtered.filter(t => t.day === currentDayFilter);
+        }
+
+        if (filtered.length === 0) {
+            let msg = "Tukaj nimaš nobenih nalog! 🎉";
+            if (currentTab === 'done') msg = "Še nisi dokončal nobene naloge. 😃";
+            if (currentTab === 'failed') msg = "Super, nimaš zamujenih nalog! 👏";
+
+            listElement.innerHTML = `
+                <div class="empty-state">
+                    <span>🎈</span>
+                    <p>${msg}</p>
+                </div>
+            `;
+            return;
+        }
+
+        filtered.forEach(task => {
+            const card = document.createElement('div');
+            card.className = 'task-card';
+
+            // Barva roba glede na predmet
+            let borderStyle = 'var(--primary)';
+            if (task.status === 'done') borderStyle = 'var(--success)';
+            if (task.status === 'failed') borderStyle = 'var(--danger)';
+            card.style.borderLeftColor = borderStyle;
+
+            let dateInfo = `Dodano: ${task.createdDate}`;
+            if (task.dueDate) {
+                const parts = task.dueDate.split('-');
+                const formattedDueDate = `${parts[2]}.${parts[1]}.${parts[0]}`;
+                dateInfo += ` | Rok: ${formattedDueDate}`;
+            }
+
+            let lateBadge = '';
+            if (task.status === 'done' && task.isLate) {
+                lateBadge = `<span class="badge badge-late">Zamuda! ⏰</span>`;
+            }
+
+            if (task.status === 'done' && task.completedDate) {
+                dateInfo += ` | Narejeno: ${task.completedDate}`;
+            }
+
+            let actionButtons = '';
+            if (currentTab === 'active') {
+                actionButtons = `
+                    <button class="action-btn btn-check" onclick="markStatus(${task.id}, 'done')" title="Označi kot narejeno">✔</button>
+                    <button class="action-btn btn-cross" onclick="markStatus(${task.id}, 'failed')" title="Označi kot neurejeno">✖</button>
+                `;
+            } else {
+                actionButtons = `
+                    <button class="action-btn btn-delete" onclick="deleteTask(${task.id})" title="Izbriši">🗑️</button>
+                `;
+            }
+
+            card.innerHTML = `
+                <div class="task-info">
+                    <div>
+                        <span class="task-subject">${task.subject}</span>
+                        <span class="badge badge-day">${task.day}</span>
+                        ${lateBadge}
+                    </div>
+                    <div class="task-desc">${task.text}</div>
+                    <div class="task-dates">${dateInfo}</div>
+                </div>
+                <div class="task-actions">
+                    ${actionButtons}
+                </div>
+            `;
+
+            listElement.appendChild(card);
+        });
+    }
 </script>
- 
+
 </body>
 </html>
