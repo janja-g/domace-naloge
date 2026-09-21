@@ -4,141 +4,402 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Moje šolske naloge</title>
+ 
 <style>
+ 
 body{
 font-family:Arial,sans-serif;
-background:#e8f5e9;
 margin:0;
-padding:20px;
+background:#eef4f8;
 }
-.card{
+ 
+header{
+background:#0077b6;
+color:white;
+padding:15px;
+text-align:center;
+font-size:24px;
+font-weight:bold;
+}
+ 
+#opozorilo{
+background:#fff3cd;
+padding:10px;
+text-align:center;
+font-weight:bold;
+}
+ 
+.container{
+padding:15px;
+}
+ 
+h2{
+color:#0077b6;
+}
+ 
+.urnik{
+display:grid;
+grid-template-columns:repeat(5,1fr);
+gap:10px;
+}
+ 
+.dan{
 background:white;
-max-width:600px;
-margin:auto;
+border-radius:12px;
+padding:10px;
+box-shadow:0 2px 5px rgba(0,0,0,0.1);
+}
+ 
+.dan h3{
+margin-top:0;
+text-align:center;
+color:#0077b6;
+}
+ 
+.predmet{
+background:#e3f2fd;
+margin:5px 0;
+padding:8px;
+border-radius:8px;
+cursor:pointer;
+font-weight:bold;
+}
+ 
+.predmet:hover{
+background:#bbdefb;
+}
+ 
+.modal{
+display:none;
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,0.5);
+}
+ 
+.modal-content{
+background:white;
+width:90%;
+max-width:500px;
+margin:40px auto;
 padding:20px;
 border-radius:15px;
-box-shadow:0 2px 10px rgba(0,0,0,0.1);
 }
- h1{
-color:#009688;
-text-align:center;
-}
- input{
+ 
+input{
 width:100%;
 padding:10px;
-margin-top:10px;
-border-radius:10px;
-border:1px solid #ccc;
+margin:10px 0;
 box-sizing:border-box;
 }
- button{
-margin-top:10px;
-padding:10px 15px;
-background:#009688;
-color:white;
+ 
+button{
+padding:8px 15px;
 border:none;
-border-radius:10px;
+border-radius:8px;
 cursor:pointer;
 }
- li{
-margin-top:10px;
+ 
+.add{
+background:#4caf50;
+color:white;
 }
- .done{
+ 
+.done{
+background:#2196f3;
+color:white;
+}
+ 
+.delete{
+background:#f44336;
+color:white;
+}
+ 
+.task{
+display:flex;
+justify-content:space-between;
+align-items:center;
+background:#f5f5f5;
+padding:8px;
+margin-top:5px;
+border-radius:8px;
+}
+ 
+.completed{
 text-decoration:line-through;
 color:green;
+font-weight:bold;
 }
- </style>
- </head>
- <body>
  
-<div class="card">
+.close{
+float:right;
+font-size:24px;
+cursor:pointer;
+}
  
-<h1>📚 Moje šolske naloge</h1>
+@media(max-width:900px){
+.urnik{
+grid-template-columns:1fr;
+}
+}
  
-<input id="naloga" placeholder="Vpiši domačo nalogo">
+</style>
+</head>
  
-<button onclick="dodajNalogo()">
-Dodaj nalogo
+<body>
+ 
+<header>
+📚 Moje šolske naloge
+</header>
+ 
+<div id="opozorilo"></div>
+ 
+<div class="container">
+ 
+<h2>📅 Tedenski urnik</h2>
+ 
+<div class="urnik">
+ 
+<div class="dan">
+<h3>PON</h3>
+ 
+<div class="predmet" onclick="odpri('SLJ')">📖 SLJ <span id="s-SLJ"></span></div>
+<div class="predmet" onclick="odpri('MAT')">➗ MAT <span id="s-MAT"></span></div>
+<div class="predmet" onclick="odpri('TJA')">🇬🇧 TJA <span id="s-TJA"></span></div>
+<div class="predmet" onclick="odpri('GEO')">🌍 GEO <span id="s-GEO"></span></div>
+ 
+</div>
+ 
+<div class="dan">
+<h3>TOR</h3>
+ 
+<div class="predmet" onclick="odpri('ZGO')">🏰 ZGO <span id="s-ZGO"></span></div>
+<div class="predmet" onclick="odpri('MAT')">➗ MAT <span id="s-MAT2"></span></div>
+<div class="predmet" onclick="odpri('GUM')">🎵 GUM <span id="s-GUM"></span></div>
+<div class="predmet" onclick="odpri('TJA')">🇬🇧 TJA <span id="s-TJA2"></span></div>
+ 
+</div>
+ 
+<div class="dan">
+<h3>SRE</h3>
+ 
+<div class="predmet" onclick="odpri('SPO')">🏃 ŠPO <span id="s-SPO"></span></div>
+<div class="predmet" onclick="odpri('LUM')">🎨 LUM <span id="s-LUM"></span></div>
+<div class="predmet" onclick="odpri('TIT')">⚙️ TIT <span id="s-TIT"></span></div>
+<div class="predmet" onclick="odpri('SLJ')">📖 SLJ <span id="s-SLJ2"></span></div>
+ 
+</div>
+ 
+<div class="dan">
+<h3>ČET</h3>
+ 
+<div class="predmet" onclick="odpri('GEO')">🌍 GEO <span id="s-GEO2"></span></div>
+<div class="predmet" onclick="odpri('TJA')">🇬🇧 TJA <span id="s-TJA3"></span></div>
+<div class="predmet" onclick="odpri('SLJ')">📖 SLJ <span id="s-SLJ3"></span></div>
+<div class="predmet" onclick="odpri('MAT')">➗ MAT <span id="s-MAT3"></span></div>
+ 
+</div>
+ 
+<div class="dan">
+<h3>PET</h3>
+ 
+<div class="predmet" onclick="odpri('SLJ')">📖 SLJ <span id="s-SLJ4"></span></div>
+<div class="predmet" onclick="odpri('MAT')">➗ MAT <span id="s-MAT4"></span></div>
+<div class="predmet" onclick="odpri('DKE')">🏛️ DKE <span id="s-DKE"></span></div>
+<div class="predmet" onclick="odpri('NAR')">🔬 NAR <span id="s-NAR"></span></div>
+ 
+</div>
+ 
+</div>
+ 
+</div>
+ 
+<div class="modal" id="modal">
+ 
+<div class="modal-content">
+ 
+<span class="close" onclick="zapri()">&times;</span>
+ 
+<h2 id="naslov"></h2>
+ 
+<input id="novaNaloga" placeholder="Vpiši domačo nalogo">
+ 
+<button class="add" onclick="dodajNalogo()">
+➕ Dodaj nalogo
 </button>
  
-<ul id="seznam"></ul>
+<div id="naloge"></div>
+ 
+</div>
  
 </div>
  
 <script>
  
-let naloge = JSON.parse(localStorage.getItem("naloge")) || [];
+let trenutniPredmet="";
+let podatki=JSON.parse(localStorage.getItem("naloge"))||{};
  
-function shrani(){
-localStorage.setItem("naloge", JSON.stringify(naloge));
+function odpri(predmet){
+ 
+trenutniPredmet=predmet;
+ 
+document.getElementById("naslov").innerText=predmet;
+ 
+document.getElementById("modal").style.display="block";
+ 
+prikaziNaloge();
+ 
 }
  
-function prikazi(){
- 
-let seznam = document.getElementById("seznam");
- 
-seznam.innerHTML = "";
- 
-naloge.forEach((naloga,index)=>{
- 
-let li = document.createElement("li");
- 
-li.innerHTML = `
-<span class="${naloga.opravljeno ? 'done' : ''}">
-${naloga.opravljeno ? '✅' : '⬜'}
-${naloga.besedilo}
-</span>
-<button onclick="oznaci(${index})">✔</button>
-<button onclick="izbrisi(${index})">✖</button>
-`;
- 
-seznam.appendChild(li);
- 
-});
- 
+function zapri(){
+document.getElementById("modal").style.display="none";
 }
  
 function dodajNalogo(){
  
-let vnos = document.getElementById("naloga");
+let txt=document.getElementById("novaNaloga").value;
  
-if(vnos.value.trim()=="") return;
+if(txt.trim()=="") return;
  
-naloge.push({
-besedilo:vnos.value,
-opravljeno:false
+if(!podatki[trenutniPredmet]){
+podatki[trenutniPredmet]=[];
+}
+ 
+podatki[trenutniPredmet].push({
+text:txt,
+done:false
 });
  
-vnos.value="";
+document.getElementById("novaNaloga").value="";
  
 shrani();
-prikazi();
+ 
+prikaziNaloge();
+posodobiZvezdice();
+ 
+}
+ 
+function prikaziNaloge(){
+ 
+let div=document.getElementById("naloge");
+ 
+let arr=podatki[trenutniPredmet]||[];
+ 
+div.innerHTML="";
+ 
+arr.forEach((n,index)=>{
+ 
+div.innerHTML+=`
+<div class="task">
+ 
+<span class="${n.done?'completed':''}">
+${n.done?'✅':'⬜'} ${n.text}
+</span>
+ 
+<div>
+ 
+<button class="done"
+onclick="oznaci(${index})">
+✔
+</button>
+ 
+<button class="delete"
+onclick="izbrisi(${index})">
+🗑
+</button>
+ 
+</div>
+ 
+</div>
+`;
+ 
+});
  
 }
  
 function oznaci(index){
  
-naloge[index].opravljeno =
-!naloge[index].opravljeno;
+podatki[trenutniPredmet][index].done=
+!podatki[trenutniPredmet][index].done;
  
 shrani();
-prikazi();
+ 
+prikaziNaloge();
+ 
+posodobiZvezdice();
  
 }
  
 function izbrisi(index){
  
-naloge.splice(index,1);
+podatki[trenutniPredmet].splice(index,1);
  
 shrani();
-prikazi();
+ 
+prikaziNaloge();
+ 
+posodobiZvezdice();
  
 }
  
-prikazi();
+function shrani(){
+ 
+localStorage.setItem(
+"naloge",
+JSON.stringify(podatki)
+);
+ 
+}
+ 
+function posodobiZvezdice(){
+ 
+let vsi=document.querySelectorAll("[id^='s-']");
+ 
+vsi.forEach(x=>x.innerHTML="");
+ 
+let skupaj=0;
+ 
+for(let predmet in podatki){
+ 
+let odprte=
+podatki[predmet]
+.filter(n=>!n.done)
+.length;
+ 
+skupaj+=odprte;
+ 
+let stars="";
+ 
+if(odprte==1) stars="⭐";
+if(odprte==2) stars="⭐⭐";
+if(odprte>=3) stars="⭐⭐⭐";
+ 
+document.querySelectorAll("[id*='"+predmet+"']")
+.forEach(x=>{
+x.innerHTML=stars;
+});
+ 
+}
+ 
+let opoz="✅ Vse naloge opravljene";
+ 
+if(skupaj>0){
+opoz="⚠ Nedokončanih nalog: "+skupaj;
+}
+ 
+if(skupaj>=10){
+opoz="🔥 Imaš veliko nedokončanih nalog!";
+}
+ 
+document.getElementById("opozorilo").innerText=opoz;
+ 
+}
+ 
+posodobiZvezdice();
  
 </script>
  
 </body>
- 
 </html>
